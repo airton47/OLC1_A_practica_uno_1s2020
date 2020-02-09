@@ -21,4 +21,31 @@ public class Conjunto {
         this.elementos = new LinkedList<>();
     }
     
+    public Conjunto(String nombre,String[] elementos){
+        this.nombre = nombre;
+        setElementos(elementos);
+    }
+    
+    public void setElementos(String[] elementos){
+        for(String e:elementos){
+            this.elementos.add(e);
+        }
+    }
+    
+    public LinkedList<String> getElementos(){
+        return this.elementos;
+    }
+    
+    public boolean pertenece(String caracter){
+        boolean value = false;
+        if(!elementos.isEmpty()){
+            for(String e:elementos){
+                if(e.equals(caracter)){
+                    value = true;
+                }
+            }
+        }
+        return value;
+    }
+    
 }

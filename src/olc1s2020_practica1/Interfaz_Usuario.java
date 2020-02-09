@@ -17,11 +17,20 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
      * Creates new form Interfaz_Usuairo
      */
     private LinkedList<ExpresionRegular> list_exp_reg;
+    private LinkedList<Conjunto> conjuntos;
+    private String contenido;
+    //private LinkedList<Entrada> entradas;
     
     public Interfaz_Usuario() {
         initComponents();
         this.setLocationRelativeTo(null);
+        this.contenido = "";
         this.list_exp_reg = new LinkedList<>();
+        this.conjuntos = new LinkedList<>();
+    }
+    
+    private void analizar(String contenido_analizar){
+        
     }
 
     /**
@@ -35,9 +44,9 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        textarea_entrada = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        textarea_salida = new javax.swing.JTextArea();
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -55,13 +64,13 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel1.setText("Contenido archivo de entrada");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        textarea_entrada.setColumns(20);
+        textarea_entrada.setRows(5);
+        jScrollPane1.setViewportView(textarea_entrada);
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane2.setViewportView(jTextArea2);
+        textarea_salida.setColumns(20);
+        textarea_salida.setRows(5);
+        jScrollPane2.setViewportView(textarea_salida);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel2.setText("Salida");
@@ -203,7 +212,7 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JTextArea textarea_entrada;
+    private javax.swing.JTextArea textarea_salida;
     // End of variables declaration//GEN-END:variables
 }
