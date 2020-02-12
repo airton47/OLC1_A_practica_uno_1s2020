@@ -21,9 +21,19 @@ public class Arbol {
         
     }
     
-    public String generaDotCode(){
+    public String generaDotCode_Tree(){
         String cuerpo = "";
         
+        return cuerpo;
+    }
+    
+    public String generarDotCode_NextTable(){
+        String cuerpo = "";
+        return cuerpo;
+    }
+    
+    public String generarDotCode_TransitionTable(){
+        String cuerpo = "";
         return cuerpo;
     }
     

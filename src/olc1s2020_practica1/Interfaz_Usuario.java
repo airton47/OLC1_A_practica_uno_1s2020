@@ -19,6 +19,7 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
     private LinkedList<ExpresionRegular> list_exp_reg;
     private LinkedList<Conjunto> conjuntos;
     private String contenido;
+    private LinkedList<String> comandos;
     //private LinkedList<Entrada> entradas;
     
     public Interfaz_Usuario() {
@@ -27,6 +28,7 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
         this.contenido = "";
         this.list_exp_reg = new LinkedList<>();
         this.conjuntos = new LinkedList<>();
+        this.comandos = new LinkedList<>();
     }
     
     private void analizar(String contenido_analizar){

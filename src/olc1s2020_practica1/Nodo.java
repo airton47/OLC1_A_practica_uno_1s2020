@@ -19,22 +19,24 @@ public class Nodo {
     private int[] primeros;
     private int[] ultimos;
     private String anulabilidad;
-    private Tipo tipo;
+    private String tipo;
     
     public Nodo(){
         this.izq = null;
         this.der = null;
     }
     
-    public Nodo(String caracter,int identificador,Tipo tipo,int[] primeros, int[] ultimos){
+    public Nodo(String caracter,int identificador,String tipo,int[] primeros, int[] ultimos){
         this.caracter = caracter;
         this.identificador = identificador;
         this.primeros = primeros;
         this.ultimos = ultimos;
         this.izq = null;
         this.der = null;
+        setTipo(tipo);
         
     }
+    
 
     public String getCaracter() {
         return caracter;
@@ -78,24 +80,29 @@ public class Nodo {
         this.identificador = identificador;
     }
 
-    public Tipo getTipo() {
+    public String getTipo() {
         return tipo;
     }
 
-    public void setTipo (Tipo tipo){
+    public void setTipo (String tipo){
         this.tipo = tipo;
-        if(Tipo.OPERADOR == tipo){
-            //Cuando el simbolo u hoja no es anulable, osea anulabilidad = F|N
+        String aux = tipo.toUpperCase();
+        if(aux.equals("CONCATENACION")){
             this.anulabilidad = "N";
-        }else{
-            //Cuando el simbolo u hoja  es anulable, osea anulabilidad = V|A
+        }else if(aux.equals("UNION")){
+            this.anulabilidad = "N";
+        }else if(aux.equals("CERRADURA_KLEEN")){
             this.anulabilidad = "A";
+        }else if(aux.equals("CERRADURA_POSITIVA")){
+            this.anulabilidad = "N";
+        }else if (aux.equals("CERRADURA_QUESTION")){
+            this.anulabilidad = "A";
+        }else{
+            this.anulabilidad = "N";
         }
     }
     
     
     
-    enum Tipo{
-        OPERADOR,SIMBOLO;
-    }
+    
 }

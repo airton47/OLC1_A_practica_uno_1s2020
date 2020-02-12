@@ -16,8 +16,19 @@ public class OLC1S2020_Practica1 {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        Interfaz_Usuario interfaz = new Interfaz_Usuario();
-        interfaz.setVisible(true);
+        //Interfaz_Usuario interfaz = new Interfaz_Usuario();
+        //interfaz.setVisible(true);
+        
+        String a = "amigo ";
+        a += "\nmio     holo";
+        char [] car = a.toCharArray();
+        String mensaje = "no hay espacio en cadena";
+        for(int i = 0;i<car.length;i++){
+            if(Character.isSpaceChar(car[i]) | "\n".equals(Character.toString(car[i]))){
+                mensaje = "Si hay caracter de espacio en cadena";
+            }
+        }
+        System.out.println(mensaje +"\n"+a);
     }
     
 }
