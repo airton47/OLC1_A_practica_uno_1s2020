@@ -271,6 +271,11 @@ public class Analizador {
                     }else if(Character.isDigit(car[i])){
                         cadena +=car[i];
                         estado = 2;
+                    }else if("~".equals(Character.toString(car[i]))){
+                        cadena += car[i];
+                        System.out.println("Se ha encontrado lexema de simbolo:"+cadena);
+                        cadena = "";
+                        estado = 0;
                     }else if(car[i]>32&car[i]<126 & !Character.isLetterOrDigit(car[i])){
                         cadena += car[i];
                         if("/".equals(Character.toString(car[i]))){
@@ -338,7 +343,7 @@ public class Analizador {
                     }else if(i == entrada.length()-1 & "¿".equals(Character.toString(car[i]))){
                       System.out.println("Se ha concluido con el analisis lexico!");
                     }else{
-                        System.out.println("1-Se ha encontrado un error lexico!"+cadena);
+                        System.out.println("0-Se ha encontrado un error lexico!"+car[i]);
                         cadena = "";
                         estado  = 0;
                     }
@@ -352,7 +357,7 @@ public class Analizador {
                         System.out.println("Se ha encontrado lexema identificador: "+cadena);
                         cadena = "";
                         estado = 0;
-                    }else if(car[i]>32&car[i]<126 & !Character.isLetter(car[i])){
+                    }else if(car[i]>32&car[i]<126 & !Character.isLetter(car[i]) | "~".equals(Character.toString(car[i]))){
                         //Se reconoce un lexema de edentificador
                         i = i-1;
                         System.out.println("Se ha encontrado lexema identificador: "+cadena);
@@ -362,7 +367,7 @@ public class Analizador {
                         System.out.println("Se ha encontrado lexema identificador: "+cadena);
                         System.out.println("Se ha concluido con el analisis lexico!");
                     }else{
-                        System.out.println("0-Se ha encontrado un error lexico!"+cadena);
+                        System.out.println("1-Se ha encontrado un error lexico!"+car[i]);
                         cadena = "";
                         estado  = 0;
                     }
@@ -375,7 +380,7 @@ public class Analizador {
                         System.out.println("Se ha encontrado lexema digito: "+cadena);
                         cadena = "";
                         estado = 0;
-                    }else if(car[i]>32&car[i]<126 & !Character.isLetter(car[i])){
+                    }else if(car[i]>32&car[i]<126 & !Character.isLetter(car[i]) | "~".equals(Character.toString(car[i]))){
                         //Se reconoce un lexema de edentificador
                         i = i-1;
                         System.out.println("Se ha encontrado lexema identificador: "+cadena);
