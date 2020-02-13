@@ -5,7 +5,15 @@
  */
 package olc1s2020_practica1;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -16,10 +24,15 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
     /**
      * Creates new form Interfaz_Usuairo
      */
+    JFileChooser chooserFile = new JFileChooser();
+    File document;
+    FileInputStream inFile;
+    FileOutputStream outFile;
     private LinkedList<ExpresionRegular> list_exp_reg;
     private LinkedList<Conjunto> conjuntos;
     private String contenido;
     private LinkedList<String> comandos;
+    public String body;
     //private LinkedList<Entrada> entradas;
     
     public Interfaz_Usuario() {
@@ -29,11 +42,33 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
         this.list_exp_reg = new LinkedList<>();
         this.conjuntos = new LinkedList<>();
         this.comandos = new LinkedList<>();
+        body = "";
+    }
+    
+    public String abrirArchivo(File document){
+        String cuerpo = "";
+        try {
+                inFile = new FileInputStream(document);
+                int ascci;
+                while((ascci=inFile.read())!=-1){
+                    char caracter = (char)ascci;
+                    cuerpo += caracter;
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(Interfaz_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        return cuerpo;
+    }
+    
+    public void guardarComo(){
+        
     }
     
     private void analizar(String contenido_analizar){
         
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -46,12 +81,12 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        textarea_entrada = new javax.swing.JTextArea();
+        tf_area_entrada = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
         textarea_salida = new javax.swing.JTextArea();
         jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        generarAutomatas = new javax.swing.JButton();
+        analizarEntradas = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
@@ -66,9 +101,9 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel1.setText("Contenido archivo de entrada");
 
-        textarea_entrada.setColumns(20);
-        textarea_entrada.setRows(5);
-        jScrollPane1.setViewportView(textarea_entrada);
+        tf_area_entrada.setColumns(20);
+        tf_area_entrada.setRows(5);
+        jScrollPane1.setViewportView(tf_area_entrada);
 
         textarea_salida.setColumns(20);
         textarea_salida.setRows(5);
@@ -77,17 +112,17 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel2.setText("Salida");
 
-        jButton1.setText("Generar Automatas");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        generarAutomatas.setText("Generar Automatas");
+        generarAutomatas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                generarAutomatasActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Analizar Entradas");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        analizarEntradas.setText("Analizar Entradas");
+        analizarEntradas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                analizarEntradasActionPerformed(evt);
             }
         });
 
@@ -120,15 +155,15 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 440, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(generarAutomatas, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton2))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 513, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(analizarEntradas))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 513, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1))
                 .addContainerGap(456, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -136,8 +171,8 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(generarAutomatas)
+                    .addComponent(analizarEntradas))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
@@ -154,16 +189,37 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         // TODO add your handling code here:
+        if(chooserFile.showDialog(null, "Abrir")==JFileChooser.APPROVE_OPTION){
+            document=chooserFile.getSelectedFile();
+            if(document.canRead()){
+                analizarEntradas.setEnabled(true);
+                if(document.getName().endsWith("er")){
+                    String texto = abrirArchivo(document);
+                    //jLabel2.setText("Archivo:  "+document.getName().toString());
+                    body = texto;
+                    tf_area_entrada.setText(body);
+                                        
+                }else{
+                    JOptionPane.showMessageDialog(null,"Archivo invalido!");
+                }
+            }
+        }
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void generarAutomatasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generarAutomatasActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+        Analizador lexico = new Analizador();
+        if(!tf_area_entrada.getText().equals("")){
+            lexico.analisis(tf_area_entrada.getText());
+        }else{
+            JOptionPane.showMessageDialog(null,"No hay archivo cargado en el area de entrada!");
+        }
+    }//GEN-LAST:event_generarAutomatasActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void analizarEntradasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analizarEntradasActionPerformed
         // TODO add your handling code here:
         
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_analizarEntradasActionPerformed
 
     /**
      * @param args the command line arguments
@@ -202,8 +258,8 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton analizarEntradas;
+    private javax.swing.JButton generarAutomatas;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
@@ -214,7 +270,7 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea textarea_entrada;
     private javax.swing.JTextArea textarea_salida;
+    private javax.swing.JTextArea tf_area_entrada;
     // End of variables declaration//GEN-END:variables
 }

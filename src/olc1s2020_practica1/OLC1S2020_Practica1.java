@@ -16,9 +16,10 @@ public class OLC1S2020_Practica1 {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        //Interfaz_Usuario interfaz = new Interfaz_Usuario();
-        //interfaz.setVisible(true);
+        Interfaz_Usuario interfaz = new Interfaz_Usuario();
+        interfaz.setVisible(true);
         
+        /*
         String a = "amigo ";
         a += "\nmio     holo";
         char [] car = a.toCharArray();
@@ -29,6 +30,7 @@ public class OLC1S2020_Practica1 {
             }
         }
         System.out.println(mensaje +"\n"+a);
+        */
     }
     
 }
