@@ -64,11 +64,53 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
         
     }
     
-    private void analizar(String contenido_analizar){
+    private void sustraerDatos(LinkedList<Token> lista){
         
     }
     
+    private void analizar(){
+        Analizador lexico = new Analizador();
+        lexico.analisis(tf_area_entrada.getText());
+        tf_area_salida.setText(lexico.imprimirLista());
+        LinkedList<Token> list = lexico.tokens;
+        list.removeFirst();
+        list.removeLast();
+        list.removeIf((Token t)->(t.getNombre().equals("COMENTARIO_SL")|t.getNombre().equals("COMENTARIO_ML")));
+        lexico.tokens = list;
+        lexico.imprimirLista();
+    }
     
+    private void analizarLista(LinkedList<Token> lista){
+        /*
+        LinkedList<Token> lista_aux;
+        lista.removeIf((Token i)->"COMENTARIO_SG".equals(i.getNombre()));
+        if(!lista.isEmpty()){
+            for(Token t:lista){
+                
+            }
+        }
+        */
+        System.out.println("Tamaño inicial de lista de tokens: "+lista.size());
+        
+        lista.remove(0);
+        lista.remove(lista.size()-1);
+        int[] rem = new int[100];
+        int cont = 0;
+        for(Token t :lista){
+            if(t.getNombre().equals("COMENTARIO_SL") | t.getNombre().equals("COMENTARIO_ML")){
+                rem[cont]=lista.indexOf(t);
+            }
+            cont++;
+        }
+        for(int x :rem){
+            lista.remove(x);
+        }
+        int a = lista.size();
+        System.out.println("Tamaño inicial de lista de tokens: "+a);
+        for(int i = 0;i<a;i++){
+            
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -83,7 +125,7 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tf_area_entrada = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
-        textarea_salida = new javax.swing.JTextArea();
+        tf_area_salida = new javax.swing.JTextArea();
         jLabel2 = new javax.swing.JLabel();
         generarAutomatas = new javax.swing.JButton();
         analizarEntradas = new javax.swing.JButton();
@@ -105,9 +147,9 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
         tf_area_entrada.setRows(5);
         jScrollPane1.setViewportView(tf_area_entrada);
 
-        textarea_salida.setColumns(20);
-        textarea_salida.setRows(5);
-        jScrollPane2.setViewportView(textarea_salida);
+        tf_area_salida.setColumns(20);
+        tf_area_salida.setRows(5);
+        jScrollPane2.setViewportView(tf_area_salida);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel2.setText("Salida");
@@ -211,6 +253,9 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
         Analizador lexico = new Analizador();
         if(!tf_area_entrada.getText().equals("")){
             lexico.analisis(tf_area_entrada.getText());
+            tf_area_salida.setText(lexico.imprimirLista());
+            analizarLista(lexico.tokens);
+            //analizar();
         }else{
             JOptionPane.showMessageDialog(null,"No hay archivo cargado en el area de entrada!");
         }
@@ -270,7 +315,7 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea textarea_salida;
     private javax.swing.JTextArea tf_area_entrada;
+    private javax.swing.JTextArea tf_area_salida;
     // End of variables declaration//GEN-END:variables
 }

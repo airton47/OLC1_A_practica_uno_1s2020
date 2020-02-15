@@ -19,6 +19,7 @@ public class OLC1S2020_Practica1 {
         Interfaz_Usuario interfaz = new Interfaz_Usuario();
         interfaz.setVisible(true);
         
+        
         /*
         String a = "amigo ";
         a += "\nmio     holo";
