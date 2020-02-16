@@ -15,15 +15,17 @@ public class Conjunto {
     
     private String nombre;
     private LinkedList<String> elementos;
-    
-    public Conjunto(String nombre){
+    private String tipo;
+    public Conjunto(String nombre,String tipo){
         this.nombre = nombre;
         this.elementos = new LinkedList<>();
+        this.tipo = tipo;
     }
     
-    public Conjunto(String nombre,String[] elementos){
+    public Conjunto(String nombre,String tipo,LinkedList<String> elementos){
         this.nombre = nombre;
-        setElementos(elementos);
+        this.elementos = elementos;
+        this.tipo = tipo;
     }
     
     public void setElementos(String[] elementos){
@@ -35,17 +37,57 @@ public class Conjunto {
     public LinkedList<String> getElementos(){
         return this.elementos;
     }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+    
+    
     
     public boolean pertenece(String caracter){
         boolean value = false;
         if(!elementos.isEmpty()){
-            for(String e:elementos){
-                if(e.equals(caracter)){
+            if(this.tipo == "INTERVALO"){
+                char c = caracter.charAt(0);
+                char inicio = this.elementos.get(0).charAt(0);
+                char fin = this.elementos.get(1).charAt(0);
+                if(c>=inicio & c<=fin){
                     value = true;
+                }
+            }else if(this.tipo == "LISTA"){
+                for(String e:elementos){
+                    if(e.equals(caracter)){
+                        return true;
+                    }
                 }
             }
         }
         return value;
+    }
+    
+    public String toString(){
+        String texto = "";
+        texto += "Conjunto -> " +this.nombre;
+        if(!elementos.isEmpty()){
+            texto += " elementos: ";
+            for(String st:elementos){
+                texto += st+" ";
+            }
+            
+        }
+        return texto;
     }
     
 }

@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -19,6 +20,8 @@ import javax.swing.JOptionPane;
  *
  * @author aiyel
  */
+
+
 public class Interfaz_Usuario extends javax.swing.JFrame {
 
     /**
@@ -30,6 +33,7 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
     FileOutputStream outFile;
     private LinkedList<ExpresionRegular> list_exp_reg;
     private LinkedList<Conjunto> conjuntos;
+    private LinkedList<Expresion> lista_expresiones;
     private String contenido;
     private LinkedList<String> comandos;
     public String body;
@@ -42,6 +46,7 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
         this.list_exp_reg = new LinkedList<>();
         this.conjuntos = new LinkedList<>();
         this.comandos = new LinkedList<>();
+        this.lista_expresiones = new LinkedList<>();
         body = "";
     }
     
@@ -64,52 +69,199 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
         
     }
     
-    private void sustraerDatos(LinkedList<Token> lista){
-        
-    }
     
-    private void analizar(){
-        Analizador lexico = new Analizador();
-        lexico.analisis(tf_area_entrada.getText());
-        tf_area_salida.setText(lexico.imprimirLista());
-        LinkedList<Token> list = lexico.tokens;
-        list.removeFirst();
-        list.removeLast();
-        list.removeIf((Token t)->(t.getNombre().equals("COMENTARIO_SL")|t.getNombre().equals("COMENTARIO_ML")));
-        lexico.tokens = list;
-        lexico.imprimirLista();
-    }
+   
     
     private void analizarLista(LinkedList<Token> lista){
+        
+        try {
+            lista.remove(0);
+            lista.remove(lista.size()-1);
+        } catch (Exception e) {
+            System.err.println("Se intento remover elementos de lista en indices inexistentes");
+        }
+        //Ahora se remueven todos los tokens de comentarios que no son utiles
+        //Junto con los tokens de erroes  lexicos
+        System.out.println("Numero inicial en la lista: "+lista.size());
+        if(lista.removeIf((Token i)->"COMENTARIO_ML".equals(i.getTipo())) | lista.removeIf((Token i)->"COMENTARIO_SL".equals(i.getTipo())) | lista.removeIf((Token i)->"ERROR".equals(i.getTipo()))){
+            System.out.println("Elementos fueron removidos de la lista");
+        }else{
+            System.out.println("Ningun elemento fue removido de la lista");
+        }
+        System.out.println("Numero final en la lista: "+lista.size());
+        //Ahora se analiza la lista para obtener los datos que nos interesan: conjuntos
+        //expresiones regulares y exprexiones a analizar
+        //Ahora se dividira en dos listas, la primera tendra todos los tokens de definciones
+        //de conjuntos y expresiones regulares y la otra las expresiones a evaluar
+        //para ello se encontrara la posicion en donde se encuentran los tokens %%%%
+        LinkedList<Token> definiciones = new LinkedList<>();
+        LinkedList<Token> expresiones = new LinkedList<>();
+        /*Aqui tenemos que encontrar el indice en donde se encuentran los primeros
+        cuatro %%%%
+        */
+        int contador = getIndex(lista);
+        System.out.println("el indice es:" + contador);
+        
+        /*Aqui incluiremos todos los token que estan en 'lista' antes de encontrar
+        el simbolo de ASCCI: % cuatro veces ya que todos esos token son de definiciones
+        
+        (lista.get(idx+1).getLexema().equals("%"))&(lista.get(idx+2).getLexema().equals("%"))&(lista.get(idx+3).getLexema().equals("%")) 
+        
+        **/
+        for(int a = 0;a<contador;a++){
+            definiciones.add(lista.get(a));
+        }
+        /*Esta parte es para finalmente extraer las definiciones de conjuntos
+        y expresiones regulares en la entrada
+        */
+        if(!definiciones.isEmpty()){
+            boolean flat = false;
+            String nombre = "";
+            String tipo = "";
+            String nombre_exp;
+            LinkedList<String> elementos_expreg;
+            for(Token tt: definiciones){
+                    int ind = definiciones.indexOf(tt);
+                    //Incicio-A: intruccion para identificar un conjunto en la lista
+                    //de tokens de definiciones
+                    if(tt.getTipo().equals("KW_CONJ")){
+                        if(definiciones.get(ind+2).getTipo().equals("IDENTIFICADOR")){
+                            nombre = definiciones.get(ind+2).getLexema();
+                            LinkedList<String> elementos = new LinkedList<>();
+                            if(definiciones.get(ind+6).getTipo().equals("TILDE_BARRA")){
+                                tipo = "INTERVALO";
+                                String inicio = definiciones.get(ind+5).getLexema();
+                                String fin = definiciones.get(ind+7).getLexema();
+                                elementos.add(inicio);
+                                elementos.add(fin);
+                                conjuntos.add(new Conjunto(nombre,tipo,elementos));
+                            }else if(definiciones.get(ind+6).getTipo().equals("ASCII") & definiciones.get(ind+6).getLexema().equals(",")){
+                                tipo = "LISTA";
+                                boolean flag1 = true;
+                                int cont = ind+5;
+                                while(flag1){
+                                    if(Character.isLetterOrDigit(definiciones.get(cont).getLexema().charAt(0))){
+                                        elementos.add((definiciones.get(cont).getLexema()));
+                                    }else if((definiciones.get(cont).getLexema().equals(";"))){
+                                        conjuntos.add(new Conjunto(nombre,tipo,elementos));
+                                        flag1=false;
+                                    }
+                                    cont++;
+                                }
+                                /*
+                                
+                                */
+                            }
+                    }/*Inicio-b: intrucciones para identificar a las definiciones de 
+                        expresiones regulares
+                    */
+                }else if(!tt.getTipo().equals("KW_CONJ") & tt.getTipo().equals("IDENTIFICADOR") & ind<definiciones.size()/*&(definiciones.get(ind+1).getLexema().equals("-"))*/){
+                    //System.out.println("Entro en seccion de exp_regulares");
+                    if((definiciones.get(ind+1).getLexema().equals("-"))&!(definiciones.get(ind-1).getLexema().equals(":"))){
+                        elementos_expreg = new LinkedList();
+                        nombre_exp = tt.getLexema();
+                        int cont1 = ind+3;
+                        elementos_expreg = new LinkedList<>();
+                        while(!definiciones.get(cont1).getLexema().equals(";")){
+                            if(definiciones.get(cont1).getTipo().equals("ASCII") | definiciones.get(cont1).getTipo().equals("CADENA") | definiciones.get(cont1).getTipo().equals("IDENTIFICADOR")){
+                                
+                                elementos_expreg.add(definiciones.get(cont1).getLexema());
+                            }
+                            cont1++;
+                        }
+                        list_exp_reg.add(new ExpresionRegular(nombre_exp,elementos_expreg));
+                    }
+                    /*
+                    elementos_expreg = new LinkedList();
+                    nombre_exp = tt.getLexema();
+                    int cont1 = ind+1;
+                    while(!definiciones.get(cont1).getLexema().equals(";")){
+                        if(definiciones.get(cont1).getTipo().equals("ASCII") | definiciones.get(cont1).getTipo().equals("CADENA")){
+                            elementos_expreg = new LinkedList<>();
+                            elementos_expreg.add(definiciones.get(cont1).getLexema());
+                        }
+                        cont1++;
+                    }
+                    list_exp_reg.add(new ExpresionRegular(nombre_exp,elementos_expreg));
+                    */
+                }
+            }
+        }
+        
+        if(!conjuntos.isEmpty()){
+            for(Conjunto con:conjuntos){
+                System.out.println(con.toString());
+            }
+        }
+        
+        if(!list_exp_reg.isEmpty()){
+            for(ExpresionRegular er:list_exp_reg){
+                System.out.println(er.toString());
+            }
+        }
+        /*Ahora extraeremos todos los tokens despues de la sepracion de %% %%*/
+        int inicio = contador+4;
+        for(int c = inicio;c<lista.size();c++){
+            expresiones.add(lista.get(c));
+        }
+        int j = expresiones.size()-1;
+               
         /*
-        LinkedList<Token> lista_aux;
-        lista.removeIf((Token i)->"COMENTARIO_SG".equals(i.getNombre()));
-        if(!lista.isEmpty()){
-            for(Token t:lista){
-                
+        System.out.println("ultimos lexemas: "+expresiones.get(j-3).getLexema());
+        System.out.println("ultimos lexemas: "+expresiones.get(j-2).getLexema());
+        System.out.println("ultimos lexemas: "+expresiones.get(j-1).getLexema());
+        System.out.println("ultimos lexemas: "+expresiones.get(j).getLexema());
+        System.out.println("Primer lexema en lista de expresiones: "+expresiones.get(0).getLexema());
+        */
+        String expresion_regular = "";
+        String entrada = "";
+        for(Token tt:expresiones){
+            if(tt.getTipo().equals("IDENTIFICADOR")){
+                expresion_regular = tt.getLexema();
+            }else if(tt.getLexema().equals(":") & tt.getTipo().equals("ASCII")){
+                //Aqui viene el punto y coma que se esperaba
+            }else if(tt.getTipo().equals("CADENA")){
+                entrada = tt.getLexema();
+            }else if(tt.getLexema().equals(";") & tt.getTipo().equals("ASCII")){
+                lista_expresiones.add(new Expresion(entrada,expresion_regular));
+                entrada = "";
+                expresion_regular = "";
+            }
+        }
+        
+        if(!lista_expresiones.isEmpty()){
+            for(Expresion ex : lista_expresiones){
+                System.out.println("Expresion-> "+ex.toString());
+            }
+        }
+        /*
+        System.out.println("Lista de entradas de expresiones: ");
+        if(!lista_expresiones.isEmpty()){
+            for(Expresion ex : lista_expresiones){
+                System.out.println("ExpresoinRegular: "+ex.getExpresion_regular()+", cadena de entrada: "+ex.getEntrada());
             }
         }
         */
-        System.out.println("Tamaño inicial de lista de tokens: "+lista.size());
-        
-        lista.remove(0);
-        lista.remove(lista.size()-1);
-        int[] rem = new int[100];
-        int cont = 0;
-        for(Token t :lista){
-            if(t.getNombre().equals("COMENTARIO_SL") | t.getNombre().equals("COMENTARIO_ML")){
-                rem[cont]=lista.indexOf(t);
+    }
+    
+    public int getIndex(LinkedList<Token> lista){
+        int contador = 0;
+        int limit = lista.size();
+        for(Token tk:lista){
+            int idx = lista.indexOf(tk);
+            if(tk.getLexema().equals("%") & ((lista.indexOf(tk)+3)<limit)){
+                if((lista.get(idx+1).getLexema().equals("%"))&(lista.get(idx+2).getLexema().equals("%"))&(lista.get(idx+3).getLexema().equals("%")) ){
+                    System.out.println("lex: "+lista.get(idx-3).getLexema());
+                    System.out.println("lex: "+lista.get(idx-2).getLexema());
+                    System.out.println("lex: "+lista.get(idx-1).getLexema());
+                    return lista.indexOf(tk);
+                    
+                }
+                
             }
-            cont++;
         }
-        for(int x :rem){
-            lista.remove(x);
-        }
-        int a = lista.size();
-        System.out.println("Tamaño inicial de lista de tokens: "+a);
-        for(int i = 0;i<a;i++){
-            
-        }
+        
+        return contador;
     }
 
     /**
@@ -206,7 +358,7 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
                         .addComponent(analizarEntradas))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 513, Short.MAX_VALUE)
                     .addComponent(jScrollPane1))
-                .addContainerGap(456, Short.MAX_VALUE))
+                .addContainerGap(539, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -255,7 +407,6 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
             lexico.analisis(tf_area_entrada.getText());
             tf_area_salida.setText(lexico.imprimirLista());
             analizarLista(lexico.tokens);
-            //analizar();
         }else{
             JOptionPane.showMessageDialog(null,"No hay archivo cargado en el area de entrada!");
         }
