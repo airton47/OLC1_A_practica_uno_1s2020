@@ -12,13 +12,14 @@ import java.util.LinkedList;
  * @author aiyel
  */
 public class ExpresionRegular {
-    
+    private Arbol arbol;
     private String nombre;
     private LinkedList<String> elementos;
     
     public ExpresionRegular(String nombre,LinkedList<String> elementos){
         this.elementos = elementos;
         this.nombre = nombre;
+        this.arbol = new Arbol(nombre);
     }
 
     public String getNombre() {
@@ -46,6 +47,140 @@ public class ExpresionRegular {
             }
         }
         return texto;
+    }
+
+    public Arbol getArbol() {
+        return arbol;
+    }
+
+    public void setArbol(Arbol arbol) {
+        this.arbol = arbol;
+    }
+    
+    public void armarArbol(LinkedList<Conjunto> conjuntos){
+        if(!elementos.isEmpty()){
+            LinkedList<String> aux = new LinkedList<>();
+            LinkedList<Nodo> nodos = new LinkedList<>();
+            LinkedList<Nodo> op_or = new LinkedList<>();
+            LinkedList<Nodo> op_unaria = new LinkedList<>();
+            LinkedList<Nodo> op_cocatenacion = new LinkedList<>();
+            //primero vamos a quitar los simbolos de llaves {conj} para los conjuntos
+            for(String s:elementos){                
+                aux.add(verificarSiEsConjunto(s,conjuntos));
+            }
+            //ahora se hace el primer recorrido para convertir a los elementos
+            //de la lista'elementos' en nodos para nuestro arbol
+            int identificador = 1;
+            for(String ss : aux){
+                if(ss.length()==1 & (ss.charAt(0)=='+'|ss.charAt(0)=='*')|ss.charAt(0)=='|'|ss.charAt(0)=='?'|ss.charAt(0)=='.'){
+                    switch (ss.charAt(0)) {
+                        case '+':
+                            nodos.add(new Nodo(ss,0,"MAS"));
+                            break;
+                        case '*':
+                            nodos.add(new Nodo(ss,0,"ASTERISCO"));
+                            break;
+                        case '|':
+                            nodos.add(new Nodo(ss,0,"OR"));
+                            break;
+                        case '.':
+                            nodos.add(new Nodo(ss,0,"PUNTO"));
+                            break;
+                        case '?':
+                            nodos.add(new Nodo(ss,0,"INTERROGACION"));
+                            break;                            
+                        default:
+                            break;
+                    }
+                    
+                }else{
+                    if(esConjunto(ss,conjuntos)){
+                        nodos.add(new Nodo(ss,identificador,"CADENA"));
+                    }else{
+                        nodos.add(new Nodo(ss,identificador,"CONJUNTO"));
+                    }
+                }
+                identificador ++;
+            }
+            /*Ahora hemos de hacer el segundo recorrido para identificar que nodos
+            tienen operaciones binarias del tipo or y hacer una nueva lista
+            algo importante a notar aqui es que el recorrido sera de izquierda a derecha
+            en el LinkedList de op_or
+            */
+            Nodo nodo_aux;  //Nodo auxiliar para crear al nodo que si tendra hijos
+            for(int a = 0;a<nodos.size();a++){
+                if(!nodos.get(a).getTipo().equals("OR")){ //aqui determinamos si sera un nodo normal                   
+                    op_or.add(nodos.get(a));    //lo agregamos a lista de nodos con operacion OR
+                }else{//Aqui definimos al nodo tipo OR y le asignamos como hijos a los 2 siguientes
+                    nodo_aux = nodos.get(a);
+                    nodo_aux.der = nodos.get(a+1);
+                    nodo_aux.der = nodos.get(a+2);
+                    LinkedList<Integer> primeros = new LinkedList<>();
+                    LinkedList<Integer> ultimos = new LinkedList<>();
+                    primeros.add(a+1);
+                    primeros.add(a+2);
+                    ultimos.add(a+1);
+                    ultimos.add(a+2);
+                    nodo_aux.setPrimeros(primeros);
+                    nodo_aux.setUltimos(ultimos);
+                    op_or.add(nodo_aux);//se agrega finalmente a la lista de nodos con OR
+                    a = a+2;//aumentamos el indice para que en el siguiente paso no los tome en cuenta
+                }
+            }
+            /*Ahora hemos de hacer el segundo recorrido para determinar que nodos
+            son del tipo +,*,? para hacer una nueva lista de nodos que agregara
+            nodos con las operaciones unarias anteriores, al igual que antes
+            el recorrido sera de izquierda a derecha
+            */
+            nodo_aux = null;
+            for(int a = 0;a<op_or.size();a++){
+                if(!nodos.get(a).getTipo().equals("MAS")|!nodos.get(a).getTipo().equals("ASTERISCO")|!nodos.get(a).getTipo().equals("INTERROGACION")){ //aqui determinamos si sera un nodo normal                   
+                    op_unaria.add(nodos.get(a));
+                }else{
+                    nodo_aux = nodos.get(a);
+                    LinkedList<Integer> primeros = new LinkedList<>();
+                    LinkedList<Integer> ultimos = new LinkedList<>();
+                    nodo_aux.der = nodos.get(a+1);
+                    
+                    if(nodos.get(a).getTipo().equals("MAS")){
+                        
+                    }else if(nodos.get(a).getTipo().equals("ASTERISCO")){
+                        
+                    }else if(nodos.get(a).getTipo().equals("INTERROGACION")){
+                        
+                    }
+                    nodo_aux.setPrimeros(primeros);
+                    nodo_aux.setUltimos(ultimos);
+                    op_unaria.add(nodo_aux);
+                    a = a+1;
+                }
+            }
+            
+            
+        }
+    }
+    
+    private String verificarSiEsConjunto(String cadena,LinkedList<Conjunto> conjuntos){
+        String result = "";
+        for(Conjunto c : conjuntos){
+            if(c.getNombre().contains(cadena)){
+                result = cadena.replace("{","");
+                result = result.replace("}", "");
+            }else{
+                result = cadena;
+            }
+        }
+        return result;
+    }
+    
+    private boolean esConjunto(String cadena,LinkedList<Conjunto> conjuntos){
+        boolean result = false;
+        for(Conjunto c : conjuntos){
+            if(c.getNombre().equals(cadena)){
+                result = true;
+            }
+        }
+        return result;
     }
     
 }

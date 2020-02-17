@@ -16,17 +16,38 @@ public class Nodo {
     public Nodo der;
     private int identificador;
     private String caracter;
-    private int[] primeros;
-    private int[] ultimos;
+    private LinkedList<Integer> primeros;
+    private LinkedList<Integer> ultimos;
     private String anulabilidad;
     private String tipo;
+    private boolean anulable;
     
     public Nodo(){
         this.izq = null;
         this.der = null;
+        this.caracter = "";
+        this.identificador = 0;
+        this.anulabilidad = "";
     }
     
-    public Nodo(String caracter,int identificador,String tipo,int[] primeros, int[] ultimos){
+    public Nodo(String caracter,int identificador,String tipo){
+        this.identificador = identificador;
+        this.caracter = caracter;
+        this.primeros = new LinkedList();
+        this.ultimos = new LinkedList();
+        setTipo(tipo);
+    }
+    
+    public Nodo(String caracter,int identificador,String tipo,String anulabilidad){
+        this.identificador = identificador;
+        this.caracter = caracter;
+        setTipo(tipo);
+        this.anulabilidad = anulabilidad;
+        this.primeros = new LinkedList();
+        this.ultimos = new LinkedList();
+    }
+    
+    public Nodo(String caracter,int identificador,String tipo,LinkedList<Integer> primeros, LinkedList<Integer> ultimos){
         this.caracter = caracter;
         this.identificador = identificador;
         this.primeros = primeros;
@@ -46,21 +67,23 @@ public class Nodo {
         this.caracter = caracter;
     }
 
-    public int[] getPrimeros() {
+    public LinkedList<Integer> getPrimeros() {
         return primeros;
     }
 
-    public void setPrimeros(int[] primeros) {
+    public void setPrimeros(LinkedList<Integer> primeros) {
         this.primeros = primeros;
     }
 
-    public int[] getUltimos() {
+    public LinkedList<Integer> getUltimos() {
         return ultimos;
     }
 
-    public void setUltimos(int[] ultimos) {
+    public void setUltimos(LinkedList<Integer> ultimos) {
         this.ultimos = ultimos;
     }
+
+    
 
     public String getAnulabilidad() {
         return anulabilidad;
@@ -68,6 +91,14 @@ public class Nodo {
 
     public void setAnulabilidad(String anulabilidad) {
         this.anulabilidad = anulabilidad;
+    }
+
+    public boolean isAnulable() {
+        return anulable;
+    }
+
+    public void setAnulable(boolean anulable) {
+        this.anulable = anulable;
     }
     
     
@@ -87,18 +118,24 @@ public class Nodo {
     public void setTipo (String tipo){
         this.tipo = tipo;
         String aux = tipo.toUpperCase();
-        if(aux.equals("CONCATENACION")){
+        if(aux.equals("PUNTO")){//Para '.'
             this.anulabilidad = "N";
-        }else if(aux.equals("UNION")){
+            this.anulable = false;
+        }else if(aux.equals("OR")){//Para '|'
             this.anulabilidad = "N";
-        }else if(aux.equals("CERRADURA_KLEEN")){
+            this.anulable = false;
+        }else if(aux.equals("ASTERISCO")){//Para '*'
             this.anulabilidad = "A";
-        }else if(aux.equals("CERRADURA_POSITIVA")){
+            this.anulable = true;
+        }else if(aux.equals("MAS")){//Para '+'
             this.anulabilidad = "N";
-        }else if (aux.equals("CERRADURA_QUESTION")){
+            this.anulable = false;
+        }else if (aux.equals("INTERROGACION")){//Para '?'
             this.anulabilidad = "A";
-        }else{
+            this.anulable = true;
+        }else{//Para cadenas y conjuntos
             this.anulabilidad = "N";
+            this.anulable = false;
         }
     }
     

@@ -12,9 +12,15 @@ package olc1s2020_practica1;
 public class Arbol {
     
     public Nodo raiz;
-    
+    private String nombre;
     public Arbol(String nombre){
         this.raiz = new Nodo();
+        this.nombre = nombre;
+    }
+    
+    public Arbol(){
+        this.raiz = new Nodo();
+        this.nombre = "";
     }
     
     public void insertar(){

@@ -242,6 +242,14 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
             }
         }
         */
+        list_exp_reg.get(0).armarArbol(conjuntos);
+        realizarMetodoTree();
+    }
+    
+    public void realizarMetodoTree(){
+        if(!list_exp_reg.isEmpty()){
+            
+        }
     }
     
     public int getIndex(LinkedList<Token> lista){

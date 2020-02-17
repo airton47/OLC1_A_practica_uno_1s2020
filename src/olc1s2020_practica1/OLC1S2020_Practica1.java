@@ -18,8 +18,12 @@ public class OLC1S2020_Practica1 {
         // TODO code application logic here
         Interfaz_Usuario interfaz = new Interfaz_Usuario();
         interfaz.setVisible(true);
-        
-        
+        String a = "{amigo}";
+        if(a.contains("amig")){
+            System.out.println("Si contiene la palabra "+a);
+        }else{
+            System.err.println("No contiene la palabra "+a);
+        }
         /*
         String a = "amigo ";
         a += "\nmio     holo";
