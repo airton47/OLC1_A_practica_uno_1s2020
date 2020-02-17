@@ -140,6 +140,10 @@ public class Nodo {
     }
     
     
-    
+    public String toString(){
+        String texto = "";
+        texto += "Node_id:"+identificador+" | No_char:"+caracter+" | Node_null:"+anulabilidad;
+        return texto;
+    }
     
 }

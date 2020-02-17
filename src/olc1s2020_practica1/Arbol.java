@@ -18,8 +18,8 @@ public class Arbol {
         this.nombre = nombre;
     }
     
-    public Arbol(){
-        this.raiz = new Nodo();
+    public Arbol(Nodo raiz){
+        this.raiz = raiz;
         this.nombre = "";
     }
     
@@ -29,7 +29,12 @@ public class Arbol {
     
     public String generaDotCode_Tree(){
         String cuerpo = "";
-        
+        cuerpo += generarTree(raiz);
+        return cuerpo;
+    }
+    
+    private String generarTree(Nodo raiz){
+        String cuerpo = "";
         return cuerpo;
     }
     
@@ -41,6 +46,24 @@ public class Arbol {
     public String generarDotCode_TransitionTable(){
         String cuerpo = "";
         return cuerpo;
+    }
+    
+    public void inOrder(){
+        inOrder(raiz);
+    }
+    
+    private void inOrder(Nodo node){
+        if(node!=null){
+            inOrder(node.izq);
+            System.out.println("|id:"+node.getCaracter()+"|");
+            inOrder(node.der);
+        }
+    }
+    
+    //Para usar este metodo hay que llamarlo asi: reemplazar(node.hashCode())
+    public String reemplazar(int posmemoria){
+		String cad = Integer.toString(posmemoria);
+        return cad.replace("-", "_");
     }
     
 }
