@@ -18,6 +18,11 @@ public class Arbol {
         this.nombre = nombre;
     }
     
+    public Arbol(Nodo raiz,String nombre){
+        this.raiz = raiz;
+        this.nombre = nombre;
+    }
+    
     public Arbol(Nodo raiz){
         this.raiz = raiz;
         this.nombre = "";
@@ -26,16 +31,46 @@ public class Arbol {
     public void insertar(){
         
     }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
     
-    public String generaDotCode_Tree(){
-        String cuerpo = "";
+    
+    
+    public void generarImagen_Tree(){
+        Graficador graph = new Graficador();
+        graph.crearDot(nombre, generarDotCode_Tree());
+        graph.generarImagen(nombre+".dot",nombre+".jpg");
+    }
+    
+    private String generarDotCode_Tree(){
+        String cuerpo = "digraph{\n";
+        cuerpo += "node[shape=oval]\n";
         cuerpo += generarTree(raiz);
+        cuerpo += "}";
         return cuerpo;
     }
     
-    private String generarTree(Nodo raiz){
-        String cuerpo = "";
-        return cuerpo;
+    private String generarTree(Nodo node){
+        String cadena = "";
+        if(node!=null){
+            cadena += generarTree(node.izq);
+            cadena += ("node"+reemplazar(node.hashCode())+"[label=\" "+node.getCaracter()+"\"];\n");
+            if(node.izq!=null){
+                cadena += "node"+reemplazar(node.hashCode())+"->node"+reemplazar(node.izq.hashCode())+";\n";
+            }
+            if(node.der!=null){
+                cadena += "node"+reemplazar(node.hashCode())+"->node"+reemplazar(node.der.hashCode())+";\n";
+            }
+            cadena += generarTree(node.der);
+            
+        }
+        return cadena;
     }
     
     public String generarDotCode_NextTable(){

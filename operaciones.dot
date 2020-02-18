@@ -1,0 +1,34 @@
+digraph{
+node[shape=oval]
+node221809107[label=" +"];
+node221809107->node827491205;
+node827491205[label=" digito"];
+node1816340239[label=" ."];
+node1816340239->node221809107;
+node1816340239->node2048547688;
+node2048547688[label=" +"];
+node2048547688->node858076137;
+node382652579[label=" +"];
+node1673586218[label=" |"];
+node1673586218->node382652579;
+node1673586218->node1269375009;
+node1359603910[label=" -"];
+node1269375009[label=" |"];
+node1269375009->node1359603910;
+node1269375009->node832725388;
+node1438068772[label=" *"];
+node832725388[label=" |"];
+node832725388->node1438068772;
+node832725388->node1461566107;
+node1461566107[label=" /"];
+node858076137[label=" ."];
+node858076137->node1673586218;
+node858076137->node1229727590;
+node1229727590[label=" +"];
+node1229727590->node1799389634;
+node1799389634[label=" digito"];
+node127580830[label=" ."];
+node127580830->node1816340239;
+node127580830->node1038684564;
+node1038684564[label=" #"];
+}

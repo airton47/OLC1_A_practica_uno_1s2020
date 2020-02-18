@@ -69,17 +69,14 @@ public class ExpresionRegular {
             LinkedList<Nodo> op_cocatenacion = new LinkedList<>();
             //primero vamos a quitar los simbolos de llaves {conj} para los conjuntos
             aux = elementos;
+            //Esto sera para remover los corchetes de los conjuntos
             aux.removeIf((String stg)->(stg.equals("{")|stg.equals("}")));
-            /*
-            for(String s:elementos){                
-                System.out.print(s+" ");
-                aux.add(verificarSiEsConjunto(s,conjuntos));
-            }
-            */
+                        
             System.out.print("\n");
             for(String st:aux){
                 System.out.print(st+" ");
             }
+            System.out.print(" Fin");
             //ahora se hace el primer recorrido para convertir a los elementos
             //de la lista'elementos' en nodos para nuestro arbol
             int identificador = 1;
@@ -130,17 +127,13 @@ public class ExpresionRegular {
             Nodo nodo_aux;  //Nodo auxiliar para crear al nodo que si tendra hijos
             for(int a = n;a>=0;a--){
                 if(!nodos.get(a).getTipo().equals("OR")){ //aqui determinamos si sera un nodo normal                   
-                    //op_or.add(nodos.get(a));    //lo agregamos a lista de nodos con operacion OR
+                    //lo agregamos a pila de nodos
                     pila.push(nodos.get(a));
                 }else{//Aqui definimos al nodo tipo OR y le asignamos como hijos a los 2 siguientes
                     nodo_aux = nodos.get(a);
                     Nodo izq = pila.pop();
                     Nodo der = pila.pop();
-                    //nodo_aux.der = nodos.get(a+1);
-                    //nodo_aux.der = nodos.get(a+2);
                     
-                    //nodo_aux.der = nodos.get(a-2);
-                    //nodo_aux.der = nodos.get(a-1);
                     nodo_aux.der = der;
                     nodo_aux.izq =izq;
                     LinkedList<Integer> primeros = new LinkedList<>();
@@ -149,18 +142,11 @@ public class ExpresionRegular {
                     primeros.add(izq.getIdentificador());
                     ultimos.add(der.getIdentificador());
                     ultimos.add(izq.getIdentificador());
-                    //ultimos.add(a-2);
-                    //ultimos.add(a-1);
-                    nodo_aux.setPrimeros(primeros);
-                    nodo_aux.setUltimos(ultimos);
                     
+                    nodo_aux.setPrimeros(primeros);
+                    nodo_aux.setUltimos(ultimos);                   
                     
                     pila.push(nodo_aux);
-                    //Aqui removemos los 2 ultimos nodos agregados porque se repiten
-                    //op_or.removeLast();
-                    //op_or.removeLast();
-                    //op_or.add(nodo_aux);//se agrega finalmente a la lista de nodos con OR
-                    //a = a+2;//aumentamos el indice para que en el siguiente paso no los tome en cuenta
                 }
             }
             /*Ahora hemos de hacer el segundo recorrido para determinar que nodos
@@ -184,66 +170,74 @@ public class ExpresionRegular {
                 if(op_or.get(a).getTipo().equals("MAS")){
                     System.out.println("Binaria");
                     nodo_aux = op_or.get(a);
-                    LinkedList<Integer> primeros = new LinkedList<>();
-                    LinkedList<Integer> ultimos = new LinkedList<>();
-                    nodo_aux.der = pila.pop();
                     
-                    nodo_aux.setPrimeros(primeros);
-                    nodo_aux.setUltimos(ultimos);                    
-                    pila.push(nodo_aux);
-                    
-                }else if(op_or.get(a).getTipo().equals("ASTERISCO")){
-                    System.out.println("Binaria");
-                    nodo_aux = op_or.get(a);
-                    LinkedList<Integer> primeros = new LinkedList<>();
+                    if(pila.lastElement().getTipo().equals("PUNTO")){
+                        Nodo aux_2 = pila.pop();
+                        Nodo izq_aux = pila.pop();
+                        Nodo der_aux = pila.pop();
+                        aux_2.izq = izq_aux;
+                        aux_2.der = der_aux;
+                        nodo_aux.der = aux_2;
+                        pila.push(nodo_aux);
+                    }else{
+                        LinkedList<Integer> primeros = new LinkedList<>();
                     LinkedList<Integer> ultimos = new LinkedList<>();
                     nodo_aux.der = pila.pop();                    
                     nodo_aux.setPrimeros(primeros);
                     nodo_aux.setUltimos(ultimos);                    
                     pila.push(nodo_aux);
+                    }
+                    
+                    
+                }else if(op_or.get(a).getTipo().equals("ASTERISCO")){
+                    System.out.println("Binaria");
+                    nodo_aux = op_or.get(a);
+                    
+                    if(pila.lastElement().getTipo().equals("PUNTO")){
+                        Nodo aux_2 = pila.pop();
+                        Nodo izq_aux = pila.pop();
+                        Nodo der_aux = pila.pop();
+                        aux_2.izq = izq_aux;
+                        aux_2.der = der_aux;
+                        nodo_aux.der = aux_2;
+                        pila.push(nodo_aux);
+                    }else{
+                        LinkedList<Integer> primeros = new LinkedList<>();
+                    LinkedList<Integer> ultimos = new LinkedList<>();
+                    nodo_aux.der = pila.pop();                    
+                    nodo_aux.setPrimeros(primeros);
+                    nodo_aux.setUltimos(ultimos);                    
+                    pila.push(nodo_aux);
+                    }
+                    
                     
                 }else if(op_or.get(a).getTipo().equals("INTERROGACION")){
                     System.out.println("Binaria");
                     nodo_aux = op_or.get(a);
-                    LinkedList<Integer> primeros = new LinkedList<>();
-                    LinkedList<Integer> ultimos = new LinkedList<>();
-                    nodo_aux.der = pila.pop();
                     
+                    if(pila.lastElement().getTipo().equals("PUNTO")){
+                        Nodo aux_2 = pila.pop();
+                        Nodo izq_aux = pila.pop();
+                        Nodo der_aux = pila.pop();
+                        aux_2.izq = izq_aux;
+                        aux_2.der = der_aux;
+                        nodo_aux.der = aux_2;
+                        pila.push(nodo_aux);
+                    }else{
+                        LinkedList<Integer> primeros = new LinkedList<>();
+                    LinkedList<Integer> ultimos = new LinkedList<>();
+                    nodo_aux.der = pila.pop();                    
                     nodo_aux.setPrimeros(primeros);
                     nodo_aux.setUltimos(ultimos);                    
                     pila.push(nodo_aux);
-                    
-                }else{
-                    pila.push(op_or.get(a));
-                    System.out.println("No binaria");
-                }
-                /*
-                if(!op_or.get(a).getTipo().equals("MAS")|!op_or.get(a).getTipo().equals("ASTERISCO")|!op_or.get(a).getTipo().equals("INTERROGACION")){ //aqui determinamos si sera un nodo normal                   
-                    //op_unaria.add(nodos.get(a));
-                    pila.push(op_or.get(a));
-                    System.out.println("No binaria");
-                }else{
-                    System.out.println("Binaria");
-                    nodo_aux = op_or.get(a);
-                    LinkedList<Integer> primeros = new LinkedList<>();
-                    LinkedList<Integer> ultimos = new LinkedList<>();
-                    nodo_aux.der = pila.pop();
-                    
-                    if(op_or.get(a).getTipo().equals("MAS")){
-                        
-                    }else if(op_or.get(a).getTipo().equals("ASTERISCO")){
-                        
-                    }else if(op_or.get(a).getTipo().equals("INTERROGACION")){
-                        
                     }
-                    nodo_aux.setPrimeros(primeros);
-                    nodo_aux.setUltimos(ultimos);
                     
-                    pila.push(nodo_aux);
-                    //op_unaria.add(nodo_aux);
-                    //a = a+1;
+                    
+                }else{
+                    pila.push(op_or.get(a));
+                    System.out.println("No binaria");
                 }
-                */
+                                
             }
             System.out.println("\n");
             for(Nodo np:pila){
@@ -266,8 +260,6 @@ public class ExpresionRegular {
                         nodo_aux.der = der;
                     }
                     
-                    
-                    
                     pila.push(nodo_aux);
                 }else{
                     pila.push(op_unaria.get(a));
@@ -281,35 +273,12 @@ public class ExpresionRegular {
             Nodo raiz = new Nodo(".",0,"N");
             Nodo aceptacion = new Nodo("#",identificador+1,"N");
             Arbol tree = new Arbol(raiz);
+            tree.setNombre(nombre);
             tree.raiz.izq = pila.pop();
             tree.raiz.der = aceptacion;
             tree.inOrder();
-            
-            /*
-            for(int a = 0;a<op_or.size();a++){
-                if(!nodos.get(a).getTipo().equals("MAS")|!nodos.get(a).getTipo().equals("ASTERISCO")|!nodos.get(a).getTipo().equals("INTERROGACION")){ //aqui determinamos si sera un nodo normal                   
-                    op_unaria.add(nodos.get(a));
-                }else{
-                    nodo_aux = nodos.get(a);
-                    LinkedList<Integer> primeros = new LinkedList<>();
-                    LinkedList<Integer> ultimos = new LinkedList<>();
-                    nodo_aux.der = nodos.get(a+1);
-                    
-                    if(nodos.get(a).getTipo().equals("MAS")){
-                        
-                    }else if(nodos.get(a).getTipo().equals("ASTERISCO")){
-                        
-                    }else if(nodos.get(a).getTipo().equals("INTERROGACION")){
-                        
-                    }
-                    nodo_aux.setPrimeros(primeros);
-                    nodo_aux.setUltimos(ultimos);
-                    op_unaria.add(nodo_aux);
-                    a = a+1;
-                }
-            }
-            */
-            
+            tree.generarImagen_Tree();
+            System.out.println("Fin ");
             
         }
     }
