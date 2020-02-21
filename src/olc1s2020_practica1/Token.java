@@ -32,6 +32,10 @@ public class Token {
     public String getLexema() {
         return lexema;
     }
+    
+    public String getLexemaSimple() {
+        return lexema.replace("\"","");
+    }
 
     public void setLexema(String lexema) {
         this.lexema = lexema;

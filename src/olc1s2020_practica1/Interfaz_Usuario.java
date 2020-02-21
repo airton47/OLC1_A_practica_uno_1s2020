@@ -242,7 +242,11 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
             }
         }
         */
+        list_exp_reg.get(4).armarArbol(conjuntos);
         list_exp_reg.get(3).armarArbol(conjuntos);
+        list_exp_reg.get(2).armarArbol(conjuntos);
+         list_exp_reg.get(1).armarArbol(conjuntos);
+          list_exp_reg.get(0).armarArbol(conjuntos);
         realizarMetodoTree();
     }
     

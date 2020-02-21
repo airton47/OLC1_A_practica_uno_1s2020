@@ -107,14 +107,17 @@ public class ExpresionRegular {
                     LinkedList<Integer> primeros = new LinkedList<>();
                     LinkedList<Integer> ultimos = new LinkedList<>();
                     primeros.add(identificador);
-                    primeros.add(identificador);
+                    ultimos.add(identificador);
                     if(esConjunto(ss,conjuntos)){                        
                         nodos.add(new Nodo(ss,identificador,"CADENA",primeros,ultimos));
+                        identificador ++;
                     }else{                        
                         nodos.add(new Nodo(ss,identificador,"CONJUNTO",primeros,ultimos));
+                        identificador ++;
                     }
+                    
                 }
-                identificador ++;
+                //identificador ++; codigo original no el de arriba
             }
             /*La lista de nodos ahora tiene todos los elementos encesarios
             Ahora hemos de hacer el segundo recorrido para identificar que nodos
@@ -127,25 +130,27 @@ public class ExpresionRegular {
             Nodo nodo_aux;  //Nodo auxiliar para crear al nodo que si tendra hijos
             for(int a = n;a>=0;a--){
                 if(!nodos.get(a).getTipo().equals("OR")){ //aqui determinamos si sera un nodo normal                   
-                    //lo agregamos a pila de nodos
+                    //lo agregamos a pila de nodos para despues talvez usarlo como hijo de otro nodo
                     pila.push(nodos.get(a));
-                }else{//Aqui definimos al nodo tipo OR y le asignamos como hijos a los 2 siguientes
-                    nodo_aux = nodos.get(a);
-                    Nodo izq = pila.pop();
-                    Nodo der = pila.pop();
+                }else{//Aqui definimos al nodo tipo OR y le asignamos como hijos a los 2 primeros en la
+                    //pila de nodos
+                    nodo_aux = nodos.get(a);//nodo que sera el nuevo padre
+                    Nodo izq = pila.pop();//primer nodo en pila e hijo izquierdo del nuevo padre
+                    Nodo der = pila.pop();//segundo nodo en la pila e hijo del nuevo padre
                     
                     nodo_aux.der = der;
                     nodo_aux.izq =izq;
                     LinkedList<Integer> primeros = new LinkedList<>();
                     LinkedList<Integer> ultimos = new LinkedList<>();
-                    primeros.add(der.getIdentificador());
-                    primeros.add(izq.getIdentificador());
-                    ultimos.add(der.getIdentificador());
-                    ultimos.add(izq.getIdentificador());
                     
-                    nodo_aux.setPrimeros(primeros);
-                    nodo_aux.setUltimos(ultimos);                   
+                    //primeros.add(izq.getIdentificador());
+                    //primeros.add(der.getIdentificador());
+                    //ultimos.add(izq.getIdentificador());
+                    //ultimos.add(der.getIdentificador());
                     
+                    //nodo_aux.setPrimeros(primeros);
+                    //nodo_aux.setUltimos(ultimos);                   
+                    nodo_aux.refreshPrimerosUltimos();
                     pila.push(nodo_aux);
                 }
             }
@@ -159,10 +164,13 @@ public class ExpresionRegular {
                 
                 System.out.println(nn.toString());
             }
+            //Aqui se vacia la pila y se meten todos los nodos en otra lista
             while(!pila.isEmpty()){
                 op_or.add(pila.pop());
             }
-            
+            /*
+            Este es el segundo paso para finalmento tomar las operacion unarias de + ? *
+            */
             nodo_aux = null;
             int num_op = op_or.size()-1;
             for(int a = num_op;a>=0;a--){
@@ -177,14 +185,17 @@ public class ExpresionRegular {
                         Nodo der_aux = pila.pop();
                         aux_2.izq = izq_aux;
                         aux_2.der = der_aux;
+                        aux_2.refreshPrimerosUltimos();
                         nodo_aux.der = aux_2;
+                        nodo_aux.refreshPrimerosUltimos();
                         pila.push(nodo_aux);
                     }else{
                         LinkedList<Integer> primeros = new LinkedList<>();
                     LinkedList<Integer> ultimos = new LinkedList<>();
                     nodo_aux.der = pila.pop();                    
-                    nodo_aux.setPrimeros(primeros);
-                    nodo_aux.setUltimos(ultimos);                    
+                    //nodo_aux.setPrimeros(primeros);
+                    //nodo_aux.setUltimos(ultimos);  
+                    nodo_aux.refreshPrimerosUltimos();
                     pila.push(nodo_aux);
                     }
                     
@@ -199,14 +210,17 @@ public class ExpresionRegular {
                         Nodo der_aux = pila.pop();
                         aux_2.izq = izq_aux;
                         aux_2.der = der_aux;
+                        aux_2.refreshPrimerosUltimos();
                         nodo_aux.der = aux_2;
+                        nodo_aux.refreshPrimerosUltimos();
                         pila.push(nodo_aux);
                     }else{
                         LinkedList<Integer> primeros = new LinkedList<>();
                     LinkedList<Integer> ultimos = new LinkedList<>();
                     nodo_aux.der = pila.pop();                    
-                    nodo_aux.setPrimeros(primeros);
-                    nodo_aux.setUltimos(ultimos);                    
+                    //nodo_aux.setPrimeros(primeros);
+                    //nodo_aux.setUltimos(ultimos);
+                    nodo_aux.refreshPrimerosUltimos();
                     pila.push(nodo_aux);
                     }
                     
@@ -221,14 +235,17 @@ public class ExpresionRegular {
                         Nodo der_aux = pila.pop();
                         aux_2.izq = izq_aux;
                         aux_2.der = der_aux;
+                        aux_2.refreshPrimerosUltimos();
                         nodo_aux.der = aux_2;
+                        nodo_aux.refreshPrimerosUltimos();
                         pila.push(nodo_aux);
                     }else{
                         LinkedList<Integer> primeros = new LinkedList<>();
                     LinkedList<Integer> ultimos = new LinkedList<>();
                     nodo_aux.der = pila.pop();                    
-                    nodo_aux.setPrimeros(primeros);
-                    nodo_aux.setUltimos(ultimos);                    
+                    //nodo_aux.setPrimeros(primeros);
+                    //nodo_aux.setUltimos(ultimos);    
+                    nodo_aux.refreshPrimerosUltimos();
                     pila.push(nodo_aux);
                     }
                     
@@ -259,9 +276,10 @@ public class ExpresionRegular {
                         Nodo der = pila.pop();
                         nodo_aux.der = der;
                     }
-                    
+                    nodo_aux.refreshPrimerosUltimos();
                     pila.push(nodo_aux);
                 }else{
+                    op_unaria.get(a).refreshPrimerosUltimos();
                     pila.push(op_unaria.get(a));
                 }
             }
@@ -270,12 +288,16 @@ public class ExpresionRegular {
                 System.out.println("op3: "+np.toString());
             }
             
-            Nodo raiz = new Nodo(".",0,"N");
-            Nodo aceptacion = new Nodo("#",identificador+1,"N");
+            Nodo raiz = new Nodo(".",0,"PUNTO");
+            Nodo aceptacion = new Nodo("#",identificador,"N");
+            Integer last = identificador;
+            aceptacion.getPrimeros().add(last);
+            aceptacion.getUltimos().add(last);
             Arbol tree = new Arbol(raiz);
             tree.setNombre(nombre);
             tree.raiz.izq = pila.pop();
             tree.raiz.der = aceptacion;
+            raiz.refreshPrimerosUltimos();
             tree.inOrder();
             tree.generarImagen_Tree();
             System.out.println("Fin ");

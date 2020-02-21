@@ -62,6 +62,20 @@ public class Nodo {
     public String getCaracter() {
         return caracter;
     }
+    
+    public String getCaracterSimple() {
+        String lexem = caracter.replace("\"", "");
+        if(lexem.equals("|")){
+            lexem = "OR";
+        }else if(lexem.equals("<")){
+            lexem = "menor_que";
+        }else if(lexem.equals(">")){
+            lexem = "mayor_que";
+        }else if(lexem.equals(" ")){
+            lexem = "espacio_en_blanco";
+        }
+        return lexem;
+    }
 
     public void setCaracter(String caracter) {
         this.caracter = caracter;
@@ -146,4 +160,148 @@ public class Nodo {
         return texto;
     }
     
+    public String primerosToString(){
+        String prim = "";
+        if(!primeros.isEmpty() ){
+            for(int x:primeros){
+                prim += x+" "; 
+            }
+        }
+        return prim;
+    }
+    
+    public String ultimosToString(){
+        String ult = "";
+        if(!ultimos.isEmpty()){
+            for(int x :ultimos){
+                ult += x + " ";
+            }
+        }
+        return ult;
+    }
+    
+    public void addPrimerosFrom(Nodo nodo){
+        for(Integer i : nodo.getPrimeros()){
+            primeros.add(i);
+        }
+    }
+    
+    public void addUltimosFrom(Nodo nodo){
+        for(Integer i: nodo.getUltimos()){
+            ultimos.add(i);
+        }
+    }
+    
+    public void refreshPrimerosUltimos(){
+        //this.tipo = tipo;
+        String aux = tipo.toUpperCase();
+        if(aux.equals("PUNTO")){//Para '.'
+            anulable = izq.isAnulable() & der.isAnulable();
+            if(anulable = true){
+                anulabilidad = "A";
+            }else{
+                anulabilidad = "N";
+            }
+            if(izq.isAnulable()){
+                for(Integer i : izq.getPrimeros()){
+                    primeros.add(i);
+                }
+                for(Integer i : der.getPrimeros()){
+                    primeros.add(i);
+                }
+            }else{
+                for(Integer i : izq.getPrimeros()){
+                    primeros.add(i);
+                }
+            }
+            //para ultimos del nodo
+            if(der.isAnulable()){
+                for(Integer i : izq.getUltimos()){
+                    ultimos.add(i);
+                }
+                for(Integer i : der.getUltimos()){
+                    ultimos.add(i);
+                }
+            }else{
+                for(Integer i : izq.getUltimos()){
+                    ultimos.add(i);
+                }
+            }
+            
+        }else if(aux.equals("OR")){//Para '|'
+            anulable = izq.isAnulable() | der.isAnulable();
+            if(anulable = true){
+                anulabilidad = "A";
+            }else{
+                anulabilidad = "N";
+            }
+            for(Integer i: izq.getPrimeros()){
+                primeros.add(i);
+            }
+            for(Integer i: der.getPrimeros()){
+                primeros.add(i);
+            }
+            for(Integer i: izq.getUltimos()){
+                ultimos.add(i);
+            }
+            for(Integer i: der.getUltimos()){
+                ultimos.add(i);
+            }
+        }else if(aux.equals("ASTERISCO")){//Para '*'
+            if(this.izq!=null){
+                primeros = this.izq.getPrimeros();
+                ultimos = this.izq.getUltimos();
+            }
+            if(this.der!=null){
+                primeros = this.der.getPrimeros();
+                ultimos = this.der.getUltimos();
+            }
+            
+        }else if(aux.equals("MAS")){//Para '+'
+            if(izq!=null){
+                anulable = izq.isAnulable();
+                if(anulable==true){
+                    anulabilidad = "A";                    
+                }else{
+                    anulabilidad = "N";
+                }
+                primeros = izq.getPrimeros();
+                ultimos = izq.getUltimos();
+                
+                
+            }
+            
+            if(der!=null){
+                anulable = der.isAnulable();
+                if(anulable==true){
+                    anulabilidad = "A";
+                    
+                }else{
+                    anulabilidad = "N";
+                }
+                primeros = der.getPrimeros();
+                ultimos = der.getUltimos();
+            }
+            
+        }else if (aux.equals("INTERROGACION")){//Para '?'
+            anulable = true;
+            if(izq!=null){
+                primeros = izq.getPrimeros();
+                ultimos = izq.getUltimos();
+                
+            }
+            if(der!=null){
+                primeros = der.getPrimeros();
+                ultimos = der.getUltimos();
+            }
+            
+        }else{//Para cadenas y conjuntos
+            
+                    
+        }
+    }
+    
+    public void refreshUltimos(){
+        
+    }
 }

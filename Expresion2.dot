@@ -1,0 +1,26 @@
+digraph{
+node[shape=record];
+node173536084[label="1 |{N|+|0}|1  "];
+node173536084->node1026916007;
+node1026916007[label="1 |{N|abecedario|1}|1  "];
+node1296552968[label="1 |{A|.|0}|1 2 3  "];
+node1296552968->node173536084;
+node1296552968->node563300741;
+node350999472[label="2 |{N|conjnum|2}|2  "];
+node563300741[label="2 |{A|.|0}|2 3  "];
+node563300741->node350999472;
+node563300741->node45959116;
+node45959116[label="3 |{A|?|0}|3  "];
+node45959116->node1906914311;
+node1254986966[label="3 |{N|:|3}|3  "];
+node1906914311[label="3 |{A|.|0}|3  "];
+node1906914311->node1254986966;
+node1906914311->node7452780;
+node7452780[label="4 |{N|+|0}|4  "];
+node7452780->node1746537609;
+node1746537609[label="4 |{N|abecedario|4}|4  "];
+node1353385089[label="1 5 |{A|.|0}|1 2 3  "];
+node1353385089->node1296552968;
+node1353385089->node1994805606;
+node1994805606[label="5 |{N|#|5}|5  "];
+}

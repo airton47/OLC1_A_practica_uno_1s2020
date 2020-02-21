@@ -44,7 +44,7 @@ public class Arbol {
     
     public void generarImagen_Tree(){
         Graficador graph = new Graficador();
-        graph.crearDot(nombre, generarDotCode_Tree());
+        graph.crearDot(nombre, generarDotCode_Tree_2());
         graph.generarImagen(nombre+".dot",nombre+".jpg");
     }
     
@@ -56,11 +56,13 @@ public class Arbol {
         return cuerpo;
     }
     
+    
+    
     private String generarTree(Nodo node){
         String cadena = "";
         if(node!=null){
             cadena += generarTree(node.izq);
-            cadena += ("node"+reemplazar(node.hashCode())+"[label=\" "+node.getCaracter()+"\"];\n");
+            cadena += ("node"+reemplazar(node.hashCode())+"[label=\" "+node.getCaracterSimple()+"\"];\n");
             if(node.izq!=null){
                 cadena += "node"+reemplazar(node.hashCode())+"->node"+reemplazar(node.izq.hashCode())+";\n";
             }
@@ -68,6 +70,31 @@ public class Arbol {
                 cadena += "node"+reemplazar(node.hashCode())+"->node"+reemplazar(node.der.hashCode())+";\n";
             }
             cadena += generarTree(node.der);
+            
+        }
+        return cadena;
+    }
+    
+    private String generarDotCode_Tree_2(){
+        String cuerpo = "digraph{\n";
+        cuerpo += "node[shape=record];\n";
+        cuerpo += generarTree_2(raiz);
+        cuerpo += "}";
+        return cuerpo;
+    }
+    
+    private String generarTree_2(Nodo node){
+        String cadena = "";
+        if(node!=null){
+            cadena += generarTree_2(node.izq);
+            cadena += ("node"+reemplazar(node.hashCode())+"[label=\""+node.primerosToString()+"|{"+node.getAnulabilidad()+"|"+node.getCaracterSimple()+"|"+node.getIdentificador()+"}|"+node.ultimosToString()+" \"];\n");
+            if(node.izq!=null){
+                cadena += "node"+reemplazar(node.hashCode())+"->node"+reemplazar(node.izq.hashCode())+";\n";
+            }
+            if(node.der!=null){
+                cadena += "node"+reemplazar(node.hashCode())+"->node"+reemplazar(node.der.hashCode())+";\n";
+            }
+            cadena += generarTree_2(node.der);
             
         }
         return cadena;
