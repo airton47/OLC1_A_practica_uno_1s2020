@@ -5,6 +5,7 @@
  */
 package olc1s2020_practica1;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -12,19 +13,18 @@ import java.util.LinkedList;
  * @author aiyel
  */
 public class Siguiente {
-    private Integer id_nodo;
+    private int id_nodo;
     private LinkedList<Integer> siguientes;
-    
-    public Siguiente(Integer id){
+    public Siguiente(int id){
         this.id_nodo = id;
         this.siguientes = new LinkedList<>();
     }    
 
-    public Integer getId_nodo() {
+    public int getId_nodo() {
         return id_nodo;
     }
 
-    public void setId_nodo(Integer id_nodo) {
+    public void setId_nodo(int id_nodo) {
         this.id_nodo = id_nodo;
     }
 
@@ -36,5 +36,15 @@ public class Siguiente {
         this.siguientes = siguientes;
     }
     
+    public String siguientesToString(){
+        String a = "Node "+this.getId_nodo()+": ";
+        for(Integer i:siguientes){
+            a+= i+ " ";
+        }
+        /*
+        
+        */
+        return a;
+    }
     
 }

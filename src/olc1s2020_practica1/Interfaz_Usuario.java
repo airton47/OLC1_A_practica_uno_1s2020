@@ -28,6 +28,7 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
     /**
      * Creates new form Interfaz_Usuairo
      */
+    String sig = "";
     JFileChooser chooserFile = new JFileChooser();
     File document;
     LinkedList<String> direcImagenes;
@@ -256,7 +257,10 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
             for(ExpresionRegular ex: list_exp_reg){
                 ex.armarArbol(conjuntos);
                 arboles[contador] = ex.getArbol().getNombre();
+                
                 contador ++;
+                sig += ex.getSiguientesTexto();
+                ex.printSiguientes();
             }
             
             
@@ -562,8 +566,10 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
         Analizador lexico = new Analizador();
         if(!tf_area_entrada.getText().equals("")){
             lexico.analisis(tf_area_entrada.getText());
-            tf_area_salida.setText(lexico.imprimirLista());
+            
+            //sig = "";
             analizarLista(lexico.tokens);
+            tf_area_salida.setText(lexico.imprimirLista()+sig);
         }else{
             JOptionPane.showMessageDialog(null,"No hay archivo cargado en el area de entrada!");
         }

@@ -17,11 +17,13 @@ public class ExpresionRegular {
     private Arbol arbol;
     private String nombre;
     private LinkedList<String> elementos;
+    private LinkedList<Siguiente> siguientes;
     
     public ExpresionRegular(String nombre,LinkedList<String> elementos){
         this.elementos = elementos;
         this.nombre = nombre;
         this.arbol = new Arbol(nombre);
+        this.siguientes = new LinkedList<>();
     }
 
     public String getNombre() {
@@ -58,6 +60,16 @@ public class ExpresionRegular {
     public void setArbol(Arbol arbol) {
         this.arbol = arbol;
     }
+
+    public LinkedList<Siguiente> getSiguientes() {
+        return siguientes;
+    }
+
+    public void setSiguientes(LinkedList<Siguiente> siguientes) {
+        this.siguientes = siguientes;
+    }
+    
+    
     
     public void armarArbol(LinkedList<Conjunto> conjuntos){
         if(!elementos.isEmpty()){
@@ -108,10 +120,12 @@ public class ExpresionRegular {
                     LinkedList<Integer> ultimos = new LinkedList<>();
                     primeros.add(identificador);
                     ultimos.add(identificador);
-                    if(esConjunto(ss,conjuntos)){                        
+                    if(esConjunto(ss,conjuntos)){    
+                        siguientes.add(new Siguiente(identificador));
                         nodos.add(new Nodo(ss,identificador,"CADENA",primeros,ultimos));
                         identificador ++;
                     }else{                        
+                        siguientes.add(new Siguiente(identificador));
                         nodos.add(new Nodo(ss,identificador,"CONJUNTO",primeros,ultimos));
                         identificador ++;
                     }
@@ -119,6 +133,7 @@ public class ExpresionRegular {
                 }
                 //identificador ++; codigo original no el de arriba
             }
+            System.out.println("tamanio: "+siguientes.size()+nombre);
             /*La lista de nodos ahora tiene todos los elementos encesarios
             Ahora hemos de hacer el segundo recorrido para identificar que nodos
             tienen operaciones binarias del tipo or y hacer una nueva lista
@@ -186,8 +201,18 @@ public class ExpresionRegular {
                         aux_2.izq = izq_aux;
                         aux_2.der = der_aux;
                         aux_2.refreshPrimerosUltimos();
+                        for(Integer i:aux_2.der.getPrimeros()){
+                            for(Integer ii:aux_2.izq.getUltimos()){
+                                addSiguiente((int)i,(int)ii);
+                            }
+                        }
                         nodo_aux.der = aux_2;
                         nodo_aux.refreshPrimerosUltimos();
+                        for(Integer i:nodo_aux.getUltimos()){
+                            for(Integer ii:nodo_aux.getPrimeros()){
+                                addSiguiente((int)i,(int)ii);
+                            }
+                        }
                         pila.push(nodo_aux);
                     }else{
                         LinkedList<Integer> primeros = new LinkedList<>();
@@ -196,6 +221,11 @@ public class ExpresionRegular {
                     //nodo_aux.setPrimeros(primeros);
                     //nodo_aux.setUltimos(ultimos);  
                     nodo_aux.refreshPrimerosUltimos();
+                    for(Integer i:nodo_aux.getUltimos()){
+                        for(Integer ii:nodo_aux.getPrimeros()){
+                            addSiguiente((int)i,(int)ii);
+                        }
+                    }
                     pila.push(nodo_aux);
                     }
                     
@@ -211,8 +241,18 @@ public class ExpresionRegular {
                         aux_2.izq = izq_aux;
                         aux_2.der = der_aux;
                         aux_2.refreshPrimerosUltimos();
+                        for(Integer i:aux_2.der.getPrimeros()){
+                            for(Integer ii:aux_2.izq.getUltimos()){
+                                addSiguiente((int)i,(int)ii);
+                            }
+                        }
                         nodo_aux.der = aux_2;
                         nodo_aux.refreshPrimerosUltimos();
+                        for(Integer i:nodo_aux.getUltimos()){
+                            for(Integer ii:nodo_aux.getPrimeros()){
+                                addSiguiente((int)i,(int)ii);
+                            }
+                        }
                         pila.push(nodo_aux);
                     }else{
                         LinkedList<Integer> primeros = new LinkedList<>();
@@ -221,6 +261,11 @@ public class ExpresionRegular {
                     //nodo_aux.setPrimeros(primeros);
                     //nodo_aux.setUltimos(ultimos);
                     nodo_aux.refreshPrimerosUltimos();
+                    for(Integer i:nodo_aux.getUltimos()){
+                        for(Integer ii:nodo_aux.getPrimeros()){
+                            addSiguiente((int)i,(int)ii);
+                        }
+                    }
                     pila.push(nodo_aux);
                     }
                     
@@ -236,6 +281,11 @@ public class ExpresionRegular {
                         aux_2.izq = izq_aux;
                         aux_2.der = der_aux;
                         aux_2.refreshPrimerosUltimos();
+                        for(Integer i:aux_2.der.getPrimeros()){
+                            for(Integer ii:aux_2.izq.getUltimos()){
+                                addSiguiente((int)i,(int)ii);
+                            }
+                        }
                         nodo_aux.der = aux_2;
                         nodo_aux.refreshPrimerosUltimos();
                         pila.push(nodo_aux);
@@ -277,6 +327,11 @@ public class ExpresionRegular {
                         nodo_aux.der = der;
                     }
                     nodo_aux.refreshPrimerosUltimos();
+                    for(Integer i:nodo_aux.der.getPrimeros()){
+                            for(Integer ii:nodo_aux.izq.getUltimos()){
+                                addSiguiente((int)i,(int)ii);
+                            }
+                        }
                     pila.push(nodo_aux);
                 }else{
                     //op_unaria.get(a).refreshPrimerosUltimos();
@@ -290,6 +345,7 @@ public class ExpresionRegular {
             
             Nodo raiz = new Nodo(".",0,"PUNTO");
             Nodo aceptacion = new Nodo("#",identificador,"N");
+            siguientes.add(new Siguiente(identificador));
             Integer last = identificador;
             aceptacion.getPrimeros().add(last);
             aceptacion.getUltimos().add(last);
@@ -298,8 +354,14 @@ public class ExpresionRegular {
             tree.raiz.izq = pila.pop();
             tree.raiz.der = aceptacion;
             raiz.refreshPrimerosUltimos();
+            for(Integer i:raiz.der.getPrimeros()){
+                for(Integer ii:raiz.izq.getUltimos()){
+                    addSiguiente((int)i,(int)ii);
+                }
+            }
             tree.inOrder();
             tree.generarImagen_Tree();
+            crearTablaSiguientes();
             System.out.println("Fin ");
             
         }
@@ -338,5 +400,65 @@ public class ExpresionRegular {
         }
         return result;
     }
+    
+    public void addSiguiente(int id,int nodo){
+        int in_id = id;
+        int id_nodo = nodo;
+        Siguiente aux = null;
+        for(Siguiente sig:siguientes){
+            if(sig.getId_nodo()==in_id){
+                aux = sig;
+            }
+        }
+        boolean flag = false;
+        if(aux!=null){
+            for(Integer i: aux.getSiguientes()){
+                if(i==id_nodo){
+                    flag = true;
+                }
+            }
+            if(flag==false){
+                aux.getSiguientes().add(id_nodo);
+            }
+        }
+    }
+    
+    public String getSiguientesTexto(){
+        String a = nombre+"\n";
+        
+        for(Siguiente s:siguientes){
+            a += s.siguientesToString()+"\n";
+        }
+        a += "\n";
+        a += "\n";
+        a += "\n";
+        return a;
+    }
+    
+    public void printSiguientes(){
+        String a = nombre+"\n";
+        for(Siguiente s:siguientes){
+            a += s.siguientesToString()+"\n";
+        }
+        System.out.println(a);
+    }
+    
+    public void crearTablaSiguientes(){
+        
+    }
+    
+    private String crateDotCode(){
+        String cuerpo = "digraph{\n";
+        cuerpo += "node[shape=oval]\n";
+        
+        
+        cuerpo += "node[label =\"||\"]";
+        
+        
+        cuerpo += "}";
+        return cuerpo;
+    }
+    
+    
     
 }
