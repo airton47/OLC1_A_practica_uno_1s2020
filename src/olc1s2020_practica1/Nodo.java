@@ -5,6 +5,7 @@
  */
 package olc1s2020_practica1;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -12,6 +13,7 @@ import java.util.LinkedList;
  * @author aiyel
  */
 public class Nodo {
+    
     public Nodo izq;
     public Nodo der;
     private int identificador;
@@ -197,7 +199,7 @@ public class Nodo {
         String aux = tipo.toUpperCase();
         if(aux.equals("PUNTO")){//Para '.'
             anulable = izq.isAnulable() & der.isAnulable();
-            if(anulable = true){
+            if(anulable == true){
                 anulabilidad = "A";
             }else{
                 anulabilidad = "N";
@@ -223,14 +225,14 @@ public class Nodo {
                     ultimos.add(i);
                 }
             }else{
-                for(Integer i : izq.getUltimos()){
+                for(Integer i : der.getUltimos()){
                     ultimos.add(i);
                 }
             }
             
         }else if(aux.equals("OR")){//Para '|'
-            anulable = izq.isAnulable() | der.isAnulable();
-            if(anulable = true){
+            anulable = (izq.isAnulable() | der.isAnulable());
+            if(anulable){
                 anulabilidad = "A";
             }else{
                 anulabilidad = "N";
@@ -299,6 +301,21 @@ public class Nodo {
             
                     
         }
+    }
+    
+    public Siguiente refreshSiguientes(){
+        Integer id = this.identificador;
+        Siguiente sig = new Siguiente(id);
+        if(this.tipo.equals("ASTERISCO")){
+            for(Integer i:primeros){
+                sig.getSiguientes().add(i);
+            }
+        }else if(this.tipo.equals("PUNTO")){
+            
+        }else if(this.tipo.equals("MAS")){
+            
+        }
+        return sig;
     }
     
     public void refreshUltimos(){

@@ -140,8 +140,8 @@ public class ExpresionRegular {
                     
                     nodo_aux.der = der;
                     nodo_aux.izq =izq;
-                    LinkedList<Integer> primeros = new LinkedList<>();
-                    LinkedList<Integer> ultimos = new LinkedList<>();
+                    //LinkedList<Integer> primeros = new LinkedList<>();
+                    //LinkedList<Integer> ultimos = new LinkedList<>();
                     
                     //primeros.add(izq.getIdentificador());
                     //primeros.add(der.getIdentificador());
@@ -279,7 +279,7 @@ public class ExpresionRegular {
                     nodo_aux.refreshPrimerosUltimos();
                     pila.push(nodo_aux);
                 }else{
-                    op_unaria.get(a).refreshPrimerosUltimos();
+                    //op_unaria.get(a).refreshPrimerosUltimos();
                     pila.push(op_unaria.get(a));
                 }
             }
@@ -293,8 +293,8 @@ public class ExpresionRegular {
             Integer last = identificador;
             aceptacion.getPrimeros().add(last);
             aceptacion.getUltimos().add(last);
-            Arbol tree = new Arbol(raiz);
-            tree.setNombre(nombre);
+            Arbol tree = new Arbol(raiz,nombre);
+            //tree.setNombre(nombre);
             tree.raiz.izq = pila.pop();
             tree.raiz.der = aceptacion;
             raiz.refreshPrimerosUltimos();
