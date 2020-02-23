@@ -1,20 +1,20 @@
 digraph{
 node[shape=record];
-node1338259046[label="1 |{N|+|0}|1  "];
-node1338259046->node1115719196;
-node1115719196[label="1 |{N|letra|1}|1  "];
-node1714898799[label="1 |{N|.|0}|2  "];
-node1714898799->node1338259046;
-node1714898799->node1764238353;
-node1764238353[label="2 |{N|espacio_en_blanco|2}|2  "];
-node120670292[label="1 |{N|.|0}|3  "];
-node120670292->node1714898799;
-node120670292->node1095208648;
-node1095208648[label="3 |{N|+|0}|3  "];
-node1095208648->node496481712;
-node496481712[label="3 |{N|numero|3}|3  "];
-node892797631[label="1 |{N|.|0}|4  "];
-node892797631->node120670292;
-node892797631->node944349093;
-node944349093[label="4 |{N|#|4}|4  "];
+node1043973133[label="1 |{N|+|0}|1  "];
+node1043973133->node503911506;
+node503911506[label="1 |{N|letra|1}|1  "];
+node464587058[label="1 |{N|.|0}|2  "];
+node464587058->node1043973133;
+node464587058->node161166194;
+node161166194[label="2 |{N|espacio_en_blanco|2}|2  "];
+node2045941728[label="1 |{N|.|0}|3  "];
+node2045941728->node464587058;
+node2045941728->node789554952;
+node789554952[label="3 |{N|+|0}|3  "];
+node789554952->node1013240642;
+node1013240642[label="3 |{N|numero|3}|3  "];
+node1815377695[label="1 |{N|.|0}|4  "];
+node1815377695->node2045941728;
+node1815377695->node18129134;
+node18129134[label="4 |{N|#|4}|4  "];
 }

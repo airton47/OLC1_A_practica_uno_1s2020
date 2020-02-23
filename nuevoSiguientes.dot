@@ -1,0 +1,4 @@
+digraph{
+node[shape=record];
+nodeSiguientes[label ="{1|2|3|4|}|{1 2 |3 |3 4 ||}"]
+}

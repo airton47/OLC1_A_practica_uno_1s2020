@@ -36,6 +36,14 @@ public class Siguiente {
         this.siguientes = siguientes;
     }
     
+    public String getSiguintesListString(){
+        String sigu = "";
+        for(Integer i:siguientes){
+            sigu+=i+" ";
+        }
+        return sigu;
+    }
+    
     public String siguientesToString(){
         String a = "Node "+this.getId_nodo()+": ";
         for(Integer i:siguientes){

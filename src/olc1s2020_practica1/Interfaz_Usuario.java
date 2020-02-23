@@ -253,11 +253,13 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
     public void generarListaImagenes(){
         if(!list_exp_reg.isEmpty()){
             String [] arboles = new String[list_exp_reg.size()];
+            String [] siguientes = new String[list_exp_reg.size()];
             int contador = 0;
             for(ExpresionRegular ex: list_exp_reg){
                 ex.armarArbol(conjuntos);
+                ex.generarImagen_Siguientes();
                 arboles[contador] = ex.getArbol().getNombre();
-                
+                siguientes[contador] = ex.getNombre()+"Siguientes";
                 contador ++;
                 sig += ex.getSiguientesTexto();
                 ex.printSiguientes();
@@ -271,6 +273,10 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }});
             
+            jList2.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = siguientes;        
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }});
             
             
         }
@@ -387,6 +393,11 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
+        });
+        jList2.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jList2ValueChanged(evt);
+            }
         });
         jScrollPane5.setViewportView(jList2);
 
@@ -599,10 +610,20 @@ public class Interfaz_Usuario extends javax.swing.JFrame {
         // TODO add your handling code here:
         String name = jList1.getSelectedValue();
         String path = System.getProperty("user.dir"); 
-                ImageIcon iconGeneral = new ImageIcon(path+"/"+name);
+                ImageIcon iconGeneral = new ImageIcon(path+"/"+name+".jpg");
                 iconGeneral.getImage().flush();
                 lb_imagenes.setIcon(iconGeneral);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jList2ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList2ValueChanged
+        // TODO add your handling code here:
+        if(!jList2.isSelectionEmpty()){
+            String nombre = jList2.getSelectedValue();
+            String path = System.getProperty("user.dir");
+            lb_imagenes.setIcon(new ImageIcon(path+"/"+nombre+".jpg"));
+            System.out.println(path+nombre+".jpg");
+        }
+    }//GEN-LAST:event_jList2ValueChanged
 
     /**
      * @param args the command line arguments

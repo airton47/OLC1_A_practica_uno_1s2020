@@ -201,8 +201,8 @@ public class ExpresionRegular {
                         aux_2.izq = izq_aux;
                         aux_2.der = der_aux;
                         aux_2.refreshPrimerosUltimos();
-                        for(Integer i:aux_2.der.getPrimeros()){
-                            for(Integer ii:aux_2.izq.getUltimos()){
+                        for(Integer i:aux_2.izq.getUltimos()){
+                            for(Integer ii:aux_2.der.getPrimeros()){
                                 addSiguiente((int)i,(int)ii);
                             }
                         }
@@ -241,8 +241,8 @@ public class ExpresionRegular {
                         aux_2.izq = izq_aux;
                         aux_2.der = der_aux;
                         aux_2.refreshPrimerosUltimos();
-                        for(Integer i:aux_2.der.getPrimeros()){
-                            for(Integer ii:aux_2.izq.getUltimos()){
+                        for(Integer i:aux_2.izq.getUltimos()){
+                            for(Integer ii:aux_2.der.getPrimeros()){
                                 addSiguiente((int)i,(int)ii);
                             }
                         }
@@ -281,8 +281,8 @@ public class ExpresionRegular {
                         aux_2.izq = izq_aux;
                         aux_2.der = der_aux;
                         aux_2.refreshPrimerosUltimos();
-                        for(Integer i:aux_2.der.getPrimeros()){
-                            for(Integer ii:aux_2.izq.getUltimos()){
+                        for(Integer i:aux_2.izq.getUltimos()){
+                            for(Integer ii:aux_2.der.getPrimeros()){
                                 addSiguiente((int)i,(int)ii);
                             }
                         }
@@ -327,8 +327,8 @@ public class ExpresionRegular {
                         nodo_aux.der = der;
                     }
                     nodo_aux.refreshPrimerosUltimos();
-                    for(Integer i:nodo_aux.der.getPrimeros()){
-                            for(Integer ii:nodo_aux.izq.getUltimos()){
+                    for(Integer i:nodo_aux.izq.getUltimos()){
+                            for(Integer ii:nodo_aux.der.getPrimeros()){
                                 addSiguiente((int)i,(int)ii);
                             }
                         }
@@ -354,8 +354,8 @@ public class ExpresionRegular {
             tree.raiz.izq = pila.pop();
             tree.raiz.der = aceptacion;
             raiz.refreshPrimerosUltimos();
-            for(Integer i:raiz.der.getPrimeros()){
-                for(Integer ii:raiz.izq.getUltimos()){
+            for(Integer i:raiz.izq.getUltimos()){
+                for(Integer ii:raiz.der.getPrimeros()){
                     addSiguiente((int)i,(int)ii);
                 }
             }
@@ -443,19 +443,34 @@ public class ExpresionRegular {
         System.out.println(a);
     }
     
+    public void generarImagen_Siguientes(){
+        String cuerpo = createDotCode();
+        Graficador graph = new Graficador();
+        graph.crearDot(nombre+"Siguientes", cuerpo);
+        graph.generarImagen(nombre+"Siguientes.dot", nombre+"Siguientes.jpg");
+    }
+    
     public void crearTablaSiguientes(){
         
     }
     
-    private String crateDotCode(){
+    private String createDotCode(){
         String cuerpo = "digraph{\n";
-        cuerpo += "node[shape=oval]\n";
+        cuerpo += "node[shape=record];\n";
+        
+        String columnas1 = "";
+        for(Siguiente s:siguientes){
+            columnas1 += s.getId_nodo()+"|";
+        }
+        
+        String columnas2 = "";
+        for(Siguiente s:siguientes){
+            columnas2 += s.getSiguintesListString()+"|";
+        }
+        cuerpo += "nodeSiguientes[label =\"{"+columnas1+"}|{"+columnas2+"}\"]";
         
         
-        cuerpo += "node[label =\"||\"]";
-        
-        
-        cuerpo += "}";
+        cuerpo += "\n}";
         return cuerpo;
     }
     
